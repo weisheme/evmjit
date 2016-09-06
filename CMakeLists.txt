@@ -14,6 +14,7 @@ if (NOT ${CMAKE_SYSTEM_PROCESSOR} MATCHES "x86_64|AMD64")
 	message(FATAL_ERROR "Target ${CMAKE_SYSTEM_PROCESSOR} not supported -- EVM JIT works only on x86_64 architecture")
 endif()
 
+option(EVMJIT_UNITTESTS "Include, build and execute unittest targets" OFF)
 option(EVMJIT_INCLUDE_EXAMPLES "Generate build targets for the EVMJIT examples" OFF)
 option(EVMJIT_TESTS "Create targets for CTest" OFF)
 
@@ -42,6 +43,10 @@ include(cmake/llvm.cmake)
 configure_llvm_project(llvm)
 
 add_subdirectory(libevmjit)
+
+if (EVMJIT_UNITTESTS)
+    add_subdirectory(unittests)
+endif()
 
 if (EVMJIT_INCLUDE_EXAMPLES)
 	add_subdirectory(examples)
