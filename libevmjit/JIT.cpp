@@ -351,8 +351,10 @@ static void destroy(evm_instance* instance)
 }
 
 static evm_result execute(evm_instance* instance, evm_context* context, evm_revision rev,
-	evm_message const* msg, uint8_t const* code, size_t code_size)
+	evm_message const* msg, uint8_t const* code, size_t code_size, evm_trace_fn trace_fn)
 {
+	(void) trace_fn;
+
 	auto& jit = *reinterpret_cast<JITImpl*>(instance);
 	if (!jit.host)
 		jit.host = context->fn_table;

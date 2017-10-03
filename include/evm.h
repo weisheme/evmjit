@@ -366,6 +366,23 @@ enum evm_revision {
 };
 
 
+
+
+struct evm_trace_step {
+    int64_t depth;
+    int64_t steps;
+    int64_t pc;
+    uint8_t instruction;
+    int64_t gas_left;
+    int64_t gas_cost;
+    int64_t stack_size;
+    int64_t memory_size;
+    const void* memory;
+};
+
+typedef void (*evm_trace_fn)(struct evm_context* context, const struct evm_trace_step* step);
+
+
 /// Generates and executes machine code for given EVM bytecode.
 ///
 /// All the fun is here. This function actually does something useful.
@@ -390,7 +407,8 @@ typedef struct evm_result (*evm_execute_fn)(struct evm_instance* instance,
                                             enum evm_revision rev,
                                             const struct evm_message* msg,
                                             uint8_t const* code,
-                                            size_t code_size);
+                                            size_t code_size,
+											evm_trace_fn trace_fn);
 
 
 /// Status of a code in VM. Useful for JIT-like implementations.

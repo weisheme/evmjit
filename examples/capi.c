@@ -145,7 +145,7 @@ int main(int argc, char *argv[]) {
                               code_hash, gas, 0};
 
     struct evm_result result =
-        jit->execute(jit, &ctx, EVM_HOMESTEAD, &msg, code, code_size);
+        jit->execute(jit, &ctx, EVM_HOMESTEAD, &msg, code, code_size, NULL);
 
     printf("Execution result:\n");
     if (result.status_code != EVM_SUCCESS) {

@@ -51,7 +51,8 @@ static struct evm_result execute(struct evm_instance* instance,
                                  enum evm_revision rev,
                                  const struct evm_message* msg,
                                  const uint8_t* code,
-                                 size_t code_size)
+                                 size_t code_size,
+                                 evm_trace_fn trace_fn)
 {
     struct evm_result ret = {};
     if (code_size == 0) {
@@ -84,6 +85,14 @@ static struct evm_result execute(struct evm_instance* instance,
             // malloc failed, report internal error.
             ret.status_code = EVM_INTERNAL_ERROR;
             return ret;
+        }
+        if (trace_fn) {
+            struct evm_trace_step step = {
+                .depth = 0,
+                .pc = sizeof(return_address) / 2,
+                .steps = sizeof(return_address) / 2
+            };
+            trace_fn(context, &step);
         }
         memcpy(output_data, &msg->address, address_size);
         ret.status_code = EVM_SUCCESS;
