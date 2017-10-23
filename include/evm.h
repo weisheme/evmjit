@@ -171,6 +171,10 @@ struct evm_result {
     /// function to the result itself allows EVM composition.
     evm_release_result_fn release;
 
+    evm_address create_address;
+
+    uint8_t padding[4];
+
     /// Reserved data that MAY be used by a evm_result object creator.
     ///
     /// This reserved 24 bytes extends the size of the evm_result to 64 bytes
@@ -179,12 +183,34 @@ struct evm_result {
     /// when returning result from ::evm_execute_fn.
     /// The host application MAY use this memory to keep additional data
     /// when returning result of performed calls from ::evm_call_fn.
-    union
-    {
-        void* context;     ///< A pointer for storing external objects.
-        uint8_t data[24];  ///< 24 bytes of reserved data.
-    } reserved;
+
+
+
+//    union
+//    {
+//        void* context;     ///< A pointer for storing external objects.
+//        uint8_t data[24];  ///< 24 bytes of reserved data.
+//    } reserved;
 };
+
+
+union evm_result_optional_data
+{
+	uint8_t bytes[24];
+	void* pointer;
+};
+
+inline union evm_result_optional_data* evm_get_optional_data(evm_result* result)
+{
+	return (evm_result_optional_data*) &result->create_address;
+}
+
+inline const union evm_result_optional_data* evm_get_const_optional_data(const evm_result* result)
+{
+	return (const evm_result_optional_data*) &result->create_address;
+}
+
+
 
 /// Check account existence callback function
 ///
